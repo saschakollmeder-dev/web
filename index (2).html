@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linguistische Forensik® — Der Doc</title>
+  <meta name="description" content="Der Doc — Romanautor, Copywriter, Philosoph. Linguistische Forensik: Sprache, die verkauft, bewegt und bleibt.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ground:   #07090D;
+      --ground-2: #0C1018;
+      --ground-3: #121820;
+      --text:     #E6E2D8;
+      --muted:    #6B6760;
+      --accent:   #C4001A;
+      --steel:    #1E3A52;
+      --mono:     'JetBrains Mono', monospace;
+      --display:  'Barlow Condensed', sans-serif;
+      --body:     'DM Sans', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--ground);
+      color: var(--text);
+      font-family: var(--body);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 3rem;
+      background: rgba(7, 9, 13, 0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(196, 0, 26, 0.18);
+    }
+
+    .nav-mark {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .nav-mark strong { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-decoration: none;
+      border: 1px solid var(--accent);
+      padding: 0.5rem 1.1rem;
+      transition: background 0.2s, color 0.2s;
+    }
+    .nav-cta:hover { background: var(--accent); color: var(--text); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem 3rem 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .hero-img {
+      position: absolute;
+      top: 0; right: 0;
+      width: 65%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+
+    .hero-bg-glow {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(105deg,
+          #07090D 0%,
+          #07090D 26%,
+          rgba(7,9,13,0.93) 38%,
+          rgba(7,9,13,0.55) 56%,
+          rgba(7,9,13,0.12) 76%,
+          transparent 100%
+        ),
+        linear-gradient(to bottom,
+          rgba(7,9,13,0.65) 0%,
+          transparent 16%,
+          transparent 72%,
+          rgba(7,9,13,0.9) 100%
+        ),
+        radial-gradient(ellipse 32% 28% at 6% 90%, rgba(196,0,26,0.22) 0%, transparent 70%);
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .case-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2.75rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.1s;
+    }
+    .case-id {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      color: var(--accent);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .case-rule {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(196,0,26,0.55), transparent);
+      max-width: 200px;
+    }
+    .case-status {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .status-dot {
+      display: inline-block;
+      width: 5px; height: 5px;
+      background: var(--accent);
+      border-radius: 50%;
+      margin-right: 0.5rem;
+      vertical-align: middle;
+      animation: blink 2.4s ease infinite;
+    }
+
+    .hero-title {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(4.5rem, 11.5vw, 11.5rem);
+      line-height: 0.88;
+      letter-spacing: -0.015em;
+      text-transform: uppercase;
+      color: var(--text);
+      opacity: 0;
+      animation: stampIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.3s;
+    }
+    .hero-title .line-red { color: var(--accent); display: block; }
+    .hero-title .reg {
+      font-size: 0.22em;
+      vertical-align: super;
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .hero-lower {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 3rem;
+      margin-top: 3rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.75s;
+    }
+
+    .hero-roles {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .role-item {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+    .role-dot {
+      width: 5px; height: 5px;
+      background: var(--accent);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .role-text {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .hero-tagline {
+      max-width: 360px;
+      text-align: right;
+    }
+    .hero-tagline p {
+      font-size: 0.975rem;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+    .hero-tagline strong { color: var(--text); font-weight: 500; }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      margin-top: 3.25rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 1s;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--text);
+      background: var(--accent);
+      padding: 0.9rem 2.1rem;
+      transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.82; }
+
+    .btn-ghost {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--muted);
+      border: 1px solid rgba(230,226,216,0.12);
+      padding: 0.9rem 2.1rem;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .btn-ghost:hover { color: var(--text); border-color: rgba(230,226,216,0.35); }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 1.5s;
+    }
+    .scroll-label {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      animation: scrollPulse 2.2s ease infinite 2s;
+    }
+
+    /* ── SHARED SECTION ── */
+    .s {
+      padding: 6rem 3rem;
+    }
+    .s-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+    .eyebrow::after {
+      content: '';
+      height: 1px;
+      width: 100px;
+      background: rgba(196,0,26,0.22);
+    }
+
+    /* ── STATS ── */
+    .s-stats {
+      background: var(--ground-2);
+      border-top: 1px solid rgba(196,0,26,0.12);
+      border-bottom: 1px solid rgba(196,0,26,0.12);
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .stat {
+      padding: 3.5rem 2.5rem;
+      border-right: 1px solid rgba(230,226,216,0.05);
+    }
+    .stat:last-child { border-right: none; }
+
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.1rem;
+    }
+
+    .stat-value {
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: clamp(2.8rem, 5.5vw, 5rem);
+      line-height: 1;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+    .stat-value .unit {
+      font-size: 0.4em;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+
+    .stat-desc {
+      margin-top: 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── BEFUND ── */
+    .s-befund { background: var(--ground); }
+
+    .befund-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: start;
+    }
+
+    .befund-heading {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(2.4rem, 3.8vw, 3.8rem);
+      line-height: 1.05;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      margin-bottom: 2rem;
+    }
+    .befund-heading em { font-style: normal; color: var(--accent); }
+
+    .befund-body {
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.82;
+      color: var(--muted);
+    }
+    .befund-body + .befund-body { margin-top: 1.2rem; }
+    .befund-body strong { color: var(--text); font-weight: 500; }
+
+    .befund-ig {
+      display: inline-block;
+      margin-top: 2rem;
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .befund-ig:hover { opacity: 0.7; }
+
+    .befund-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .detail {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1.6rem 0;
+      border-bottom: 1px solid rgba(230,226,216,0.05);
+    }
+    .detail:first-child { padding-top: 0; }
+    .detail:last-child { border-bottom: none; }
+
+    .detail-num {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      padding-top: 0.15rem;
+      flex-shrink: 0;
+    }
+
+    .detail-title {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+
+    .detail-text {
+      font-size: 0.875rem;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ── TATBESTAND ── */
+    .s-tatbestand { background: var(--ground-2); }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .card {
+      background: var(--ground-3);
+      padding: 2.75rem;
+      position: relative;
+      overflow: hidden;
+      transition: opacity 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+      border-top: 2px solid transparent;
+    }
+
+    .card-num {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.22em;
+      color: var(--accent);
+      margin-bottom: 1.75rem;
+    }
+
+    .card-title {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 1.6rem;
+      text-transform: uppercase;
+      line-height: 1.1;
+      margin-bottom: 1.1rem;
+      letter-spacing: 0.01em;
+    }
+
+    .card-text {
+      font-size: 0.875rem;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.72;
+    }
+
+    /* ── REFERENZFÄLLE ── */
+    .s-referenzen { background: var(--ground); }
+
+    .ref-intro {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 500px;
+      line-height: 1.75;
+      margin-bottom: 3rem;
+    }
+    .ref-intro strong { color: var(--text); font-weight: 500; }
+
+    .partners {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px;
+    }
+
+    .partner {
+      flex: 1;
+      min-width: 150px;
+      background: var(--ground-2);
+      padding: 1.6rem 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .partner:hover { background: var(--ground-3); }
+
+    .partner-name {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+      transition: color 0.2s;
+    }
+    .partner:hover .partner-name { color: var(--text); }
+
+    /* ── CTA ── */
+    .s-cta {
+      background: var(--ground-2);
+      border-top: 1px solid rgba(196,0,26,0.18);
+    }
+
+    .cta-layout {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .cta-heading {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(2.5rem, 5vw, 5.5rem);
+      line-height: 1.0;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+    }
+    .cta-heading em { font-style: normal; color: var(--accent); }
+
+    .cta-sub {
+      margin-top: 1.4rem;
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 540px;
+      line-height: 1.78;
+    }
+
+    .cta-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      align-items: flex-end;
+      flex-shrink: 0;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2rem 3rem;
+      border-top: 1px solid rgba(230,226,216,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-mark {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .footer-mark strong { color: var(--accent); }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+    }
+    .footer-links a {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--text); }
+
+    /* ── CANVAS GRID ── */
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.45;
+    }
+
+    #rays-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    /* ── KEYFRAMES ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes stampIn {
+      from { opacity: 0; transform: scale(1.04); filter: blur(10px); }
+      to   { opacity: 1; transform: scale(1);    filter: blur(0); }
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.25; }
+      50%       { opacity: 1; }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.25; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .hero-title, .case-header, .hero-lower, .hero-actions, .scroll-indicator { opacity: 1; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 960px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .s { padding: 4rem 1.5rem; }
+      .hero { padding: 7rem 1.5rem 4rem; }
+
+      .stats-row { grid-template-columns: 1fr; }
+      .stat { border-right: none; border-bottom: 1px solid rgba(230,226,216,0.05); padding: 2.5rem 1.5rem; }
+      .stat:last-child { border-bottom: none; }
+
+      .befund-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .cards { grid-template-columns: 1fr; }
+
+      .cta-layout { grid-template-columns: 1fr; gap: 2rem; }
+      .cta-buttons { align-items: flex-start; }
+
+      .hero-img { width: 100%; opacity: 0.3; }
+      .hero-lower { flex-direction: column; align-items: flex-start; }
+      .hero-tagline { text-align: left; }
+
+      footer { flex-direction: column; gap: 1.25rem; text-align: center; padding: 1.75rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <span class="nav-mark"><strong>LF</strong> // Linguistische Forensik</span>
+    <ul class="nav-links">
+      <li><a href="#befund">Befund</a></li>
+      <li><a href="#tatbestand">Tatbestand</a></li>
+      <li><a href="#referenzen">Referenzen</a></li>
+    </ul>
+    <a href="#kontakt" class="nav-cta">Fall eröffnen</a>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero" id="top">
+    <div class="hero-bg">
+      <img src="./hero.jpg" alt="" class="hero-img">
+      <canvas id="hero-canvas"></canvas>
+      <div class="hero-bg-glow"></div>
+      <canvas id="rays-canvas"></canvas>
+    </div>
+
+    <div class="hero-inner">
+      <div class="case-header">
+        <span class="case-id">Fall-Nr.&nbsp;LF-I&nbsp;//&nbsp;Der Doc&nbsp;//&nbsp;DACH</span>
+        <span class="case-rule"></span>
+        <span class="case-status"><span class="status-dot"></span>Aktiv</span>
+      </div>
+
+      <h1 class="hero-title">
+        Linguistische<br>
+        <span class="line-red">Forensik<span class="reg">®</span></span>
+      </h1>
+
+      <div class="hero-lower">
+        <div class="hero-roles">
+          <div class="role-item"><span class="role-dot"></span><span class="role-text">Romanautor</span></div>
+          <div class="role-item"><span class="role-dot"></span><span class="role-text">Copywriter</span></div>
+          <div class="role-item"><span class="role-dot"></span><span class="role-text">Philosoph</span></div>
+        </div>
+        <div class="hero-tagline">
+          <p>Sprache hinterlässt <strong>immer Spuren.</strong><br>Der Doc liest sie — und baut daraus Texte,<br>die verkaufen, bewegen und bleiben.</p>
+        </div>
+      </div>
+
+      <div class="hero-actions">
+        <a href="#kontakt" class="btn-primary">Fall eröffnen</a>
+        <a href="#befund" class="btn-ghost">Befund lesen</a>
+      </div>
+    </div>
+
+    <div class="scroll-indicator">
+      <span class="scroll-label">Scroll</span>
+      <span class="scroll-line"></span>
+    </div>
+  </section>
+
+  <!-- ── BEWEISLAGE ── -->
+  <section class="s s-stats">
+    <div class="s-inner">
+      <div class="eyebrow">Beweislage</div>
+      <div class="stats-row">
+        <div class="stat">
+          <div class="stat-label">// Leser — DACH-Raum</div>
+          <div class="stat-value">400<span class="unit">K</span></div>
+          <div class="stat-desc">Menschen, die seine Sprache täglich lesen.</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">// Generierte Umsätze</div>
+          <div class="stat-value">8<span class="unit">-stlg.</span></div>
+          <div class="stat-desc">Umsätze, entstanden durch präzise Sprache.</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">// Markt</div>
+          <div class="stat-value">D<span class="unit">ACH</span></div>
+          <div class="stat-desc">B2B im gesamten deutschsprachigen Raum.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BEFUND ── -->
+  <section class="s s-befund" id="befund">
+    <div class="s-inner">
+      <div class="eyebrow">Befund</div>
+      <div class="befund-grid">
+        <div>
+          <h2 class="befund-heading">Sprache ist<br>kein <em>Zufall.</em></h2>
+          <p class="befund-body">
+            Der Doc seziert Sprache wie ein Pathologe. Nicht aus akademischem Interesse — sondern weil <strong>jedes Wort eine Entscheidung ist</strong>, die über Kauf oder Abbruch, Vertrauen oder Gleichgültigkeit entscheidet.
+          </p>
+          <p class="befund-body">
+            Als Romanautor kennt er Dramaturgie. Als Copywriter kennt er Conversion. Als Philosoph kennt er das Bewusstsein dahinter. Diese drei Disziplinen verschmilzt er in der <strong>Bewusstseinslinguistik</strong> — einer Methode, die Texte nicht schreibt, sondern konstruiert.
+          </p>
+          <a href="https://www.instagram.com/bewusstseinslinguistik" class="befund-ig" target="_blank" rel="noopener">→ @Bewusstseinslinguistik</a>
+        </div>
+        <div class="befund-details">
+          <div class="detail">
+            <span class="detail-num">01</span>
+            <div>
+              <div class="detail-title">Bewusstseinslinguistik</div>
+              <p class="detail-text">Sprache formt, was Menschen denken — bevor sie es denken. Der Doc versteht die Mechanismen dahinter und setzt sie gezielt ein.</p>
+            </div>
+          </div>
+          <div class="detail">
+            <span class="detail-num">02</span>
+            <div>
+              <div class="detail-title">Forensische Textanalyse</div>
+              <p class="detail-text">Jeder Text hinterlässt ein Muster. Wer es lesen kann, weiß genau, wo Vertrauen entsteht — und wo es zerstört wird.</p>
+            </div>
+          </div>
+          <div class="detail">
+            <span class="detail-num">03</span>
+            <div>
+              <div class="detail-title">Narrative Strategie</div>
+              <p class="detail-text">Vom Roman bis zum Sales Letter: Wer Geschichten kontrolliert, kontrolliert Entscheidungen. Das sind keine Thesen — das sind 400.000 Leser.</p>
+            </div>
+          </div>
+          <div class="detail">
+            <span class="detail-num">04</span>
+            <div>
+              <div class="detail-title">B2B Copy — DACH</div>
+              <p class="detail-text">Für Unternehmen, die erkannt haben: Der teuerste Text ist der, der nicht verkauft.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TATBESTAND ── -->
+  <section class="s s-tatbestand" id="tatbestand">
+    <div class="s-inner">
+      <div class="eyebrow">Tatbestand</div>
+      <div class="cards">
+        <div class="card">
+          <div class="card-num">// 001</div>
+          <h3 class="card-title">Copy &amp;<br>Conversion</h3>
+          <p class="card-text">Sales Pages, E-Mail-Sequenzen, Ads — Texte mit einer einzigen Aufgabe: verkaufen. Keine Lyrik, kein Zufall. Nur Struktur und angewandte Psychologie.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">// 002</div>
+          <h3 class="card-title">Brand<br>Voice</h3>
+          <p class="card-text">Eine Stimme, die sofort erkennbar ist — kanalübergreifend und unverwechselbar. Der Doc entwickelt sprachliche Identitäten, die nicht austauschbar sind.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">// 003</div>
+          <h3 class="card-title">Bücher &amp;<br>Thought Leadership</h3>
+          <p class="card-text">Ghostwriting, Buchkonzepte, Content-Strategie — für Unternehmer, die Expertise in Sprache verwandeln wollen, die bleibt.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── REFERENZFÄLLE ── -->
+  <section class="s s-referenzen" id="referenzen">
+    <div class="s-inner">
+      <div class="eyebrow">Referenzfälle</div>
+      <p class="ref-intro">
+        Marken, die verstanden haben: <strong>Sprache ist kein Kostenpunkt — sie ist ein Umsatzfaktor.</strong>
+      </p>
+      <div class="partners">
+        <div class="partner"><span class="partner-name">The Impact Syndicate</span></div>
+        <div class="partner"><span class="partner-name">2baHead</span></div>
+        <div class="partner"><span class="partner-name">junicorn.</span></div>
+        <div class="partner"><span class="partner-name">Faber-Castell Akademie</span></div>
+        <div class="partner"><span class="partner-name">Taheri</span></div>
+        <div class="partner"><span class="partner-name">EYL Marketing</span></div>
+        <div class="partner"><span class="partner-name">Universoul</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── KONTAKT / CTA ── -->
+  <section class="s s-cta" id="kontakt">
+    <div class="s-inner">
+      <div class="cta-layout">
+        <div>
+          <h2 class="cta-heading">Den Fall<br><em>eröffnen.</em></h2>
+          <p class="cta-sub">Wenn Ihre Sprache nicht das tut, was sie soll — dann ist das kein Zufall. Es ist ein lösbares Problem. Sprechen wir darüber.</p>
+        </div>
+        <div class="cta-buttons">
+          <a href="mailto:kontakt@linguistische-forensik.de" class="btn-primary">Anfrage senden</a>
+          <a href="https://www.instagram.com/bewusstseinslinguistik" class="btn-ghost" target="_blank" rel="noopener">Instagram</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="footer-mark"><strong>Linguistische Forensik®</strong> — Der Doc</span>
+    <div class="footer-links">
+      <a href="#">Impressum</a>
+      <a href="#">Datenschutz</a>
+    </div>
+  </footer>
+
+  <!-- ChromaGrid: radius=300 damping=0.45 fadeOut=0.6 ease=power3.out -->
+  <script>
+    (function () {
+      const CONFIGS = [
+        { border: [196, 0,  26],  grad: [[196, 0,  26, 0.18], [7,  9, 13, 0]] },
+        { border: [30,  58, 82],  grad: [[30,  58, 82, 0.22], [7,  9, 13, 0]] },
+        { border: [196, 0,  26],  grad: [[80,  0,  12, 0.20], [7,  9, 13, 0]] },
+      ];
+
+      const RADIUS  = 300;
+      const DAMPING = 0.45;
+      const FADE    = 0.6;
+
+      // power3.out approximation via lerp with damping
+      function lerp(a, b, t) { return a + (b - a) * t; }
+
+      let mx = -9999, my = -9999;
+      document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+      function rgba([r,g,b,a]) { return `rgba(${r},${g},${b},${a.toFixed(3)})`; }
+
+      const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+      if (mq.matches) return;
+
+      function init() {
+        const cards = Array.from(document.querySelectorAll('.card'));
+        if (!cards.length) return;
+
+        const state = cards.map(() => ({ op: FADE, glow: 0 }));
+
+        function tick() {
+          cards.forEach((card, i) => {
+            const r   = card.getBoundingClientRect();
+            const cx  = r.left + r.width  / 2;
+            const cy  = r.top  + r.height / 2;
+            const dist = Math.hypot(mx - cx, my - cy);
+            const prox = Math.max(0, 1 - dist / RADIUS);
+
+            state[i].op   = lerp(state[i].op,   FADE + (1 - FADE) * prox, DAMPING);
+            state[i].glow = lerp(state[i].glow,  prox,                      DAMPING);
+
+            const cfg = CONFIGS[i % CONFIGS.length];
+            const g   = state[i].glow;
+            const [br, bg, bb] = cfg.border;
+
+            card.style.opacity   = state[i].op.toFixed(3);
+            card.style.borderTopColor = `rgba(${br},${bg},${bb},${g.toFixed(3)})`;
+            card.style.boxShadow = g > 0.02
+              ? `0 0 ${(40 * g).toFixed(1)}px rgba(${br},${bg},${bb},${(0.35 * g).toFixed(3)}),`
+                + `inset 0 0 ${(24 * g).toFixed(1)}px rgba(${br},${bg},${bb},${(0.08 * g).toFixed(3)})`
+              : '';
+
+            // Gradient overlay via pseudo element workaround: use background-image
+            const [c1, c2] = cfg.grad;
+            const gradAlpha1 = (c1[3] * g).toFixed(3);
+            const gradAlpha2 = c2[3];
+            card.style.backgroundImage = g > 0.02
+              ? `linear-gradient(145deg, rgba(${c1[0]},${c1[1]},${c1[2]},${gradAlpha1}), rgba(${c2[0]},${c2[1]},${c2[2]},${gradAlpha2}))`
+              : '';
+          });
+
+          requestAnimationFrame(tick);
+        }
+
+        requestAnimationFrame(tick);
+      }
+
+      // Wait for DOM
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+
+  <!-- SideRays: speed=2.5 rayColor1=#EAB308 rayColor2=#96c8ff intensity=2 spread=2 origin=top-right tilt=0 saturation=1.5 blend=0.75 falloff=1.6 opacity=1 -->
+  <script>
+    (function () {
+      const canvas = document.getElementById('rays-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      const cfg = {
+        speed:      2.5,
+        color1:     [234, 179,   8],
+        color2:     [150, 200, 255],
+        intensity:  2,
+        spread:     2,
+        tilt:       0,
+        saturation: 1.5,
+        blend:      0.75,
+        falloff:    1.6,
+        opacity:    1,
+      };
+
+      const RAY_COUNT = 18;
+      let W, H, rays, animId;
+
+      function initRays() {
+        rays = Array.from({ length: RAY_COUNT }, (_, i) => ({
+          t:         Math.random() * Math.PI * 2,
+          speed:     (0.00022 + Math.random() * 0.00018) * cfg.speed,
+          halfWidth: 0.012 + Math.random() * 0.022,
+          baseAlpha: 0.18 + Math.random() * 0.28,
+          color:     i % 2 === 0 ? cfg.color1 : cfg.color2,
+          slot:      i / (RAY_COUNT - 1),
+        }));
+      }
+
+      function resize() {
+        W = canvas.width  = canvas.offsetWidth;
+        H = canvas.height = canvas.offsetHeight;
+        initRays();
+      }
+
+      function saturate([r, g, b], s) {
+        const l = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        return [
+          Math.min(255, l + (r - l) * s),
+          Math.min(255, l + (g - l) * s),
+          Math.min(255, l + (b - l) * s),
+        ];
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+
+        const ox = W, oy = 0;
+        const centerAngle = Math.PI * 1.25 + (cfg.tilt * Math.PI / 180);
+        const arc = Math.PI * 0.47 * cfg.spread;
+        const diagLen = Math.sqrt(W * W + H * H);
+
+        rays.forEach(ray => {
+          ray.t += ray.speed;
+          const pulse = Math.pow(Math.sin(ray.t) * 0.5 + 0.5, 1.4);
+          const alpha = ray.baseAlpha * pulse * cfg.intensity * cfg.opacity;
+          const angle = centerAngle - arc / 2 + arc * ray.slot;
+          const hw = ray.halfWidth;
+          const len = diagLen * 1.4;
+
+          const endX   = ox + Math.cos(angle) * len;
+          const endY   = oy + Math.sin(angle) * len;
+          const edgeX1 = ox + Math.cos(angle - hw) * len;
+          const edgeY1 = oy + Math.sin(angle - hw) * len;
+          const edgeX2 = ox + Math.cos(angle + hw) * len;
+          const edgeY2 = oy + Math.sin(angle + hw) * len;
+
+          const grad = ctx.createLinearGradient(ox, oy, endX, endY);
+          const [r, g, b] = saturate(ray.color, cfg.saturation);
+          const s1 = Math.min(1, 0.08 * cfg.falloff);
+          const s2 = Math.min(1, 0.35 * cfg.falloff);
+          grad.addColorStop(0,  `rgba(${r|0},${g|0},${b|0},${(alpha * 0.9).toFixed(3)})`);
+          grad.addColorStop(s1, `rgba(${r|0},${g|0},${b|0},${(alpha * 0.6).toFixed(3)})`);
+          grad.addColorStop(s2, `rgba(${r|0},${g|0},${b|0},${(alpha * 0.2).toFixed(3)})`);
+          grad.addColorStop(1,  `rgba(${r|0},${g|0},${b|0},0)`);
+
+          ctx.save();
+          ctx.globalCompositeOperation = 'screen';
+          ctx.globalAlpha = cfg.blend;
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.moveTo(ox, oy);
+          ctx.lineTo(edgeX1, edgeY1);
+          ctx.lineTo(edgeX2, edgeY2);
+          ctx.closePath();
+          ctx.fill();
+          ctx.restore();
+        });
+
+        animId = requestAnimationFrame(draw);
+      }
+
+      const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+      resize();
+      if (!mq.matches) animId = requestAnimationFrame(draw);
+
+      let rtimer;
+      window.addEventListener('resize', () => {
+        cancelAnimationFrame(animId);
+        clearTimeout(rtimer);
+        rtimer = setTimeout(() => {
+          resize();
+          if (!mq.matches) animId = requestAnimationFrame(draw);
+        }, 150);
+      });
+    })();
+  </script>
+
+  <script>
+    // Forensic grid canvas — drawn once, no animation
+    (function () {
+      const canvas = document.getElementById('hero-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      function draw() {
+        const W = canvas.offsetWidth;
+        const H = canvas.offsetHeight;
+        canvas.width  = W;
+        canvas.height = H;
+        ctx.clearRect(0, 0, W, H);
+
+        const step = 72;
+        ctx.strokeStyle = 'rgba(196, 0, 26, 0.055)';
+        ctx.lineWidth = 1;
+
+        // vertical lines
+        for (let x = 0; x <= W; x += step) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+        }
+        // horizontal lines
+        for (let y = 0; y <= H; y += step) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+        }
+
+        // crosshair at intersection near center-right (subtle)
+        const cx = Math.round(W * 0.72 / step) * step;
+        const cy = Math.round(H * 0.44 / step) * step;
+        const arm = 14;
+        ctx.strokeStyle = 'rgba(196, 0, 26, 0.35)';
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(cx - arm, cy); ctx.lineTo(cx + arm, cy); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx, cy - arm); ctx.lineTo(cx, cy + arm); ctx.stroke();
+
+        // circle around crosshair
+        ctx.strokeStyle = 'rgba(196, 0, 26, 0.2)';
+        ctx.beginPath(); ctx.arc(cx, cy, 22, 0, Math.PI * 2); ctx.stroke();
+      }
+
+      draw();
+
+      let resizeTimer;
+      window.addEventListener('resize', function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(draw, 150);
+      });
+    })();
+  </script>
+
+</body>
+</html>
